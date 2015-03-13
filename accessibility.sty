@@ -127,8 +127,8 @@
 \ifthenelse{\boolean{@StandardClass}}{%
                \PackageInfo{accessibility}{Standardklasse}}{}%
 
-\pdfcompresslevel=0% Damit wird die PDF-Quelldatei lesbar
-\pdfoptionpdfminorversion=6% Bestimmt die PDF - Version der Ausgabe
+\pdfcompresslevel=0% To read the PDF source cocde
+\pdfoptionpdfminorversion=6% defines the minimum pdf output version
  %\pdfadjustspacing=0% 0, 1 oder 2 Änderung nicht erkannt
 
 \newcommand{\alt}[1]{\xdef\altAttr{#1}}%
@@ -193,12 +193,12 @@
 
 \newenvironment{PDFStructObj}[2]{% #1 StructType #2 Title
   \ifTextActive{\endPDFMarkContent\endPDFTextObj}\fi%
-  \pdfobj reserveobjnum% Objektnummer reservieren
+  \pdfobj reserveobjnum% reserve object number
   \setcounter{ObjHelp}{\pdflastobj}%
   \expandafter\xdef\csname PDF@#1@Array\endcsname{}%
   \accessPushStack{#1}{\theObjHelp}{PDF@#1@Array}{#2}%drauftun
 }%
-{%andere Ebenen Schließen
+{%close other layers
   \accessPopStack\StructElem\Objnum\KidsArray\Title %runterholen
   \ifx \StructElem\empty%
     \PackageWarning{accessibility}{empty \string\PopStack ?}%
@@ -274,14 +274,14 @@
 \newif\ifSpezialTextActive \SpezialTextActivefalse%
 
 \newenvironment*{PDFTextObj}{%
-  %altes Textobj beenden, immer max. ein Textobj aktiv
+  %end old TextObj, always at most one TextObj active
   \ifTextActive \endPDFMarkContent\endPDFTextObj\fi%
-  %neues anfangen
+  %begin new
   \global\TextActivetrue%
-  \pdfobj reserveobjnum% Objektnummer reservieren
+  \pdfobj reserveobjnum% reserve object number
   \setcounter{TextObjNum}{\pdflastobj}%
   \xdef\TextArray{}%
-  \xdef\TextType{P}% kein TextTxp --> P
+  \xdef\TextType{P}% no TextTxp --> P
 }%
 {%
  \ifTextActive%
@@ -311,9 +311,9 @@
 \xdef\titleAttr{}%
 \newenvironment*{PDFSpezialTextObj}[1]{%
   \ifTextActive \endPDFMarkContent\endPDFTextObj\fi%
-  %neues anfangen
+  %begin new
   \global\SpezialTextActivetrue%
-  \pdfobj reserveobjnum% Objektnummer reservieren
+  \pdfobj reserveobjnum% reserve object number
   \setcounter{TextObjNum}{\pdflastobj}%
   \xdef\TextArray{}%
   \xdef\TextType{#1}%
@@ -352,8 +352,8 @@
   \global\SpezialTextActivefalse%
   \xdef\TextType{}%
   \EveryparReset%
-  \xdef\altAttr{}% wieder leeren
-  \xdef\titleAttr{}% wieder leeren
+  \xdef\altAttr{}% clear again
+  \xdef\titleAttr{}% clear again
 }
 
 \xdef\lastEveryparType{}%
@@ -362,7 +362,7 @@
 \newcounter{PDFReferenceObjNum}%
 \xdef\ReferenceArray{}%
 \newenvironment*{PDFInlineObjInText}[1]{%
-  %alte einstellung merken
+  %remember old setting
   \xdef\lastEveryparType{\everyparStructElem}%
   \xdef\HelpBool{\InlineObj}%
   \xdef\Type{#1}%
@@ -374,7 +374,7 @@
   }{%
      \EveryparConfig{#1}{true}%
   }%
-  \PDFMarkContent% kein everypar
+  \PDFMarkContent% no everypar
 }%
 {%
   \endPDFMarkContent%
@@ -382,7 +382,7 @@
     \xdef\ReferenceArray{<</Type /MCR /Pg \pdfpageref\thepage \space \space 0 R /MCID \theObjNum>>}%
     \ifthenelse{\pdftexversion>139}{%
       \setcounter{ObjHelp}{\pdflastlink}%     %<< /Type /OBJR /Obj 600 0 R >>
-      %\PackageWarning{accessibility}{Objektnummer vom letzten Link: \theObjHelp}%
+      %\PackageWarning{accessibility}{Object number of last link: \theObjHelp}%
       \ifthenelse{\theObjHelp>0}{%
         \xdef\ReferenceArray{\ReferenceArray\space <</Type /OBJR /Obj \theObjHelp\space 0 R>>}%
       }{}%
@@ -392,7 +392,7 @@
          {/Reference}{\theTextObjNum}{NoPage}%
    \xdef\TextArray{\TextArray \theObjHelp\space 0 R \space}%
   }{}%
-  % alte einstellung wiederherstellen
+  % restore old settings
   \EveryparConfig{\lastEveryparType}{\HelpBool}%
   \PDFMarkContent%
 }
@@ -403,7 +403,7 @@
    \xdef\InlineObj{#2}%
 }
 
-%%Setzt die Variablen auf die Standardwerte für eine normale Texterkennung.
+%%sets variable to standard values for normal text recognitio
 \newcommand{\EveryparReset}{%
    \xdef\everyparStructElem{P}%
    \xdef\InlineObj{false}%
@@ -419,14 +419,14 @@
   \pdfliteral{/\everyparStructElem\space <</MCID \theTaggedObj>> BDC}%
   \ifthenelse{\equal{\InlineObj}{false}}{% Text
     %\ifthenelse{\equal{\themypage}{\thepage}}{}{%
-       %\PackageWarning{accessibility}{unterschiedlich \thepage<>\themypage; MCID \theTaggedObj}
+       %\PackageWarning{accessibility}{different \thepage<>\themypage; MCID \theTaggedObj}
     %}%
     \xdef\TextArray{\TextArray \space <</Type /MCR %
         %/Pg \pdfpageref\thepage \space \space 0 R %
         /Pg \pdfpageref\themypage \space \space 0 R %
         /MCID \theTaggedObj>>}%
   }{}%
-  \ifthenelse{\equal{\InlineObj}{true}}{%  inline-Objekt
+  \ifthenelse{\equal{\InlineObj}{true}}{%  inline-object
     \writePDFLeafObj{\theTaggedObj}{\everyparStructElem}%
   }{}%
   \stepcounter{TaggedObj}%
@@ -478,7 +478,7 @@
       /C /Normal %
       /K [#2] %
       /S #3 \space\LanguageCode>>}%
-    }{%keine Seitenreferenz angeben
+    }{%no page reference given
     \immediate \pdfobj useobjnum#1{<</Type /StructElem %
       /P #4\space 0 R %
       /C /Normal %
@@ -521,7 +521,7 @@
   \AtEndDocument{%
   \closeUntilPDFStruct{Document}%
   \newcounter{ClassMap}%
-  \pdfobj reserveobjnum% neues Objekt Reservieren
+  \pdfobj reserveobjnum% reserve new object
   \setcounter{ClassMap}{\pdflastobj}%
   \immediate \pdfobj useobjnum \theClassMap{<<%
       /Normal <</O /Layout /EndIndent 0.0 %
@@ -537,16 +537,16 @@
        >>} \pdfrefobj \pdflastobj%
    %\global\setcounter{ClassMap}{\pdflastobj}%
   \pdfobj {<<%
-            /IndexItem /Span % Indexeinträge
+            /IndexItem /Span % entries of index 
             /TOF /TOC % Table of Figures
-            /TOFI /TOCI % Table of Figures Eintrag
+            /TOFI /TOCI % entry for Table of Figures
             /TOT /TOC % Table of Tables
-            /TOTI /TOCI % Table of Tables Eintrag++
+            /TOTI /TOCI % Table of Tables entry++
             /Titlepage /Sect % Titlepage
             /Bibliography /L % Bibligraphy
             /BibItem /LI % BibligraphyItem
-            /ParagraphSpan /Span % geteilte Paragraphen am Seitenumbruch
-            /Footnote /Note %  Fußnotentext
+            /ParagraphSpan /Span % Split-paragraphs on page break
+            /Footnote /Note %  Footnote text 
             /Chapter /Sect%
             /Section /Sect%
             /Subsection /Sect%
@@ -563,7 +563,7 @@
      <</Type /StructTreeRoot %
        /RoleMap \theObjHelp \space 0 R %
        /ClassMap \theClassMap \space 0 R %
-       /ParentTree <</Nums [0 [\Karray]]>> % TODO Viel komplizierter
+       /ParentTree <</Nums [0 [\Karray]]>> % TODO way more complex
        /ParentTreeNextKey 1 % berechnen
        /K [\Karray] %
      >>}\pdfrefobj\pdflastobj%
@@ -588,7 +588,7 @@
 \newcount\linenopenalty\linenopenalty=-100000%
 \mathchardef\linenopenaltypar=32000%
   %
-  %%%%%%%%%%%%%Verändern der Outputroutine%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%Change of output routine%%%%%%%%%%%%%%%%%%%%%%%%
 \ifthenelse{\boolean{@Access@pdf}}{%
   \let\@tempa\output%
   \newtoks\output%
@@ -657,14 +657,14 @@
   \global\let\@AC@parpgbrk\@AC@screenoff@pen %
 }{}%
   %
-  %%%%%%%%%%%%%Initializieren der Variablen%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%Initializing variables%%%%%%%%%%%%%%%%%%%%%%%
   %
   %Zeilennummer
   \newcounter{linenumber}%
   \newcounter{abslinenumber}%
-  %Seitennummer
+  %page number
   \newcount\c@AC@truepage %
-  \global\advance\c@AC@truepage\@ne %mit eins beginnen
+  \global\advance\c@AC@truepage\@ne %start with one
   %\g@addto@macro\cl@page{\global\c@AC@truepage\c@page}%
   \g@addto@macro\cl@page{\global\advance\c@AC@truepage\@ne}%
   \@addtoreset{AC@truepage}{@ckpt}%
@@ -674,17 +674,17 @@
   \g@addto@macro\cl@page{\global\c@mypage\c@page}%
   \@addtoreset{mypage}{@ckpt}%
   %
-  %%%%%%%%%%%%%Schreiben der Zeilennummmern%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%Writing line numbers%%%%%%%%%%%%%%%%%%%%%%%
 \ifthenelse{\boolean{@Access@pdf}}{%
   \def\makeLineNumber{%
     \protected@write\@auxout{}{\string\@AC{\the\c@linenumber}{\noexpand\the\c@AC@truepage}}%
     \testNumberedPage%
-    %Schreibt die Zeilennummern
+    %writes line numbers
     %\hss{\normalfont\tiny\sffamily\thelinenumber\quad}%
   }%
 }{}%
   %
-  %%%%%%%%%%%%%%Absatz
+  %%%%%%%%%%%%%%paragraph
 \newif\ifLastLineStop \LastLineStopfalse%
 \newcounter{LastPar}%
 
@@ -722,7 +722,7 @@
   }%
 }{}%
 
-  %%%%%%%%%%%%%%Berichtigung der Seitennummer%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%Correcting page numbers%%%%%%%%%%%%%%%%%%%%%%
 \ifthenelse{\boolean{@Access@pdf}}{%
   \def\LastNumberedPage{first}%
   \def\AC@Pfirst{\nextAC\relax}%
@@ -798,12 +798,12 @@
   %
   \def\gotNumberedPage#1#2#3#4{%
     \ifodd \if@twocolumn #3\else #2\fi\relax\fi%
-    \advance\c@linenumber\@ne % Nummerierung ab 1 sonst ab 0
+    \advance\c@linenumber\@ne % numbering starts from 1, otherwise from 0
     \advance\c@linenumber-#4\relax%
   }%
 }{}%
   %
-  %%%%%%%%%%%%%%Spaltenerkennung%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%Recognition of Columns%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifthenelse{\boolean{@Access@pdf}}{%
   \def\@AC@col{\def\@AC@column} %
   \@AC@col{1}%
@@ -821,7 +821,7 @@
   }}%
 }{}%
   %
-  %%%%%%%%%%%%%%Absatzerkennung%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%Recognition of Paragraphs%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \ifthenelse{\boolean{@Access@pdf}}{%
   \let\@@@par\@@par%
   \newcount\linenoprevgraf%
@@ -851,7 +851,7 @@
   }%
 }{}%
   %
-  %%%%%%%%%%%%%%Formelbehandlung%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%Treating formulas%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \def\linenomath{%
   \ifnum\interlinepenalty>-\linenopenaltypar
     \global\holdinginserts\thr@@
@@ -917,10 +917,10 @@
 }
 
 \ifthenelse{\boolean{@Access@pdf}}{%
-  \@ifundefined{chapter}{% es gibt keine Chapter z.B. in Article-Klassen
+  \@ifundefined{chapter}{% there are not chapters, e.g. like in article classes
     }{%
     \let\originalchapter\chapter%
-    \renewcommand{\chapter}{%Sortiert die verschiedenen Aufrufe
+    \renewcommand{\chapter}{%sorts the various calls 
       \@ifstar{\originalchapterWithStar}%\chapter*{Beispielkapitel}
       {\@ifnextchar[%]
           {\originalchapterWithTwoOption}%\chapter[BspKap]{Beispielkapitel}
@@ -938,7 +938,7 @@
   \PDFSect{Chapter}{#1}\originalchapter{#1}\endPDFSect}%
 
 \ifthenelse{\boolean{@Access@pdf}}{%
-  \@ifundefined{addchap}{% es gibt keine Chapter z.B. in Article-Klassen
+  \@ifundefined{addchap}{% there are not chapters, e.g. like in article classes
   }{%
     \let\originaladdchap\addchap%
     \renewcommand{\addchap}{%
@@ -959,7 +959,7 @@
   \PDFSect{Chapter}{#1} \originaladdchap{#1} \endPDFSect}%
 
 \ifthenelse{\boolean{@Access@pdf}}{%
-  \@ifundefined{set@preamble}{% es gibt keine set@preamble außerhalb des KOMA-Scripts
+  \@ifundefined{set@preamble}{% there are no set@preamble outside from KOMA-Scripts
     }{%
     \let\originaluse@preamble\use@preamble%
     \renewcommand{\use@preamble}[1]{%
@@ -1034,7 +1034,7 @@
   \PDFMarkContent%
 }%
 {%
-  %\endPDFMarkContent% erst durch everypar
+  %\endPDFMarkContent% not until everypar
   %\endPDFTextObj%
 }
 
@@ -1217,12 +1217,12 @@
   \ifItemActive \closeItem\fi%
   %Liste beginnen
   \addtocounter{ListDepth}{1}%
-  %\PDFStructObj{L}{\empty}% Sonst Fehler bei Zugriffsprüfung AA
+  %\PDFStructObj{L}{\empty}% otherwise error by access-check AA
   \PDFStructObj{L\arabic{ListDepth}}{\empty}%
   %\PDFStructObj{L\romannumeral\theListDepth}{\empty}%
 }{%
   \ifItemActive \closeItem\fi%
-  %Liste beenden
+  %end list
   \endPDFStructObj%
   \addtocounter{ListDepth}{-1}%
 }
@@ -1239,10 +1239,10 @@
   \endPDFSpezialTextObj%
   \PDFSpezialTextObj{LBody}%
   \EveryparConfig{LBody}{false}%
-  %\PDFMarkContent{LBody}% wird über everypar erledigt
+  %\PDFMarkContent{LBody}% is done by everypar 
 }%
 
-\newcommand{\closeItem}{% Altes Item abschließen
+\newcommand{\closeItem}{% close old item
   \endPDFMarkContent%
   \endPDFSpezialTextObj%{LBody}
   \endPDFStructObj%
@@ -1324,7 +1324,7 @@
   \let\originaleqnarray\eqnarray%
   \let\originalendeqnarray\endeqnarray%
   \renewenvironment{eqnarray}%
-    {%\def&{\originalamp}%  --> das bringt den Fehler inaccessibile
+    {%\def&{\originalamp}%  --> that is getting the error "inaccessibile"
     \PackageWarning{accessibilty}{Die eqnarray-Umgebung sollte nicht mehr %
         verwendet werden, sie gilt als veraltet. (vgl. Autorenanleitung).}%
      \PDFSpezialTextObj{Formula}\EveryparConfig{Formula}{false}\originaleqnarray}%
@@ -1348,7 +1348,7 @@
 
 \ifthenelse{\boolean{@Access@pdf}}{%
   \let\original@@makecaption\@makecaption%
-%  \renewcommand{\@makecaption}[3]{% Wieso Definition mit drei Argumenten???? nur zwei geht mit listings
+%  \renewcommand{\@makecaption}[3]{% Why definitiosn with three arguments???? only two work with listings
   \renewcommand{\@makecaption}[2]{%
     \global\numberingparsfalse%
     \PDFSpezialTextObj{Caption}%
@@ -1439,7 +1439,7 @@
     \let\originalaryend\@arraycr%
     \renewcommand*{\@arraycr}{\endPDFTableCell%
        \endPDFTableLine\PDFTableLine\PDFTableCell\originalaryend}%
-  }{% wenn kein anderes Tabellen-Package
+  }{% if no other table package
     \let\originaltabend\@tabularcr%
     \renewcommand*{\@tabularcr}{\endPDFTableCell%
        \endPDFTableLine\PDFTableLine\PDFTableCell\originaltabend}%
@@ -1543,12 +1543,12 @@
         \begin{PDFInlineObjInText}{Link}%
         \originalhyper@linkfile{#1}{#2}{#3}%
         \end{PDFInlineObjInText}}%
-    %Seitenzahlen in Index, anders da anschließend keine Texterkennung nötig.
-    %eigentlich über hyperlink möglich
+    %page numbers in Index, since afterwards not text recognition neccessary
+    %actually doable via hyperlink 
     \let\originalhyperpage\hyperpage%
     \renewcommand{\hyperpage}[1]{%
         \EveryparConfig{Reference}{true}%
-        \PDFMarkContent% kein everypar
+        \PDFMarkContent% no everypar
         \originalhyperpage{#1}%
         \endPDFMarkContent}%
     % URL
@@ -1557,7 +1557,7 @@
         \begin{PDFInlineObjInText}{Link}%
         \originalnolinkurl{#1}%
         \end{PDFInlineObjInText}}%
-  }{% ohne hyperref
+  }{% without hyperref
       \let\originalref\ref%
       \renewcommand{\ref}[1]{%
         \begin{PDFInlineObjInText}{Reference}%
@@ -1573,7 +1573,7 @@
 }{}
 \ifthenelse{\boolean{@Access@pdf}}{%
   \let\originalcite\cite%
-  \renewcommand{\cite}[2][__empty__]{% #1 Name des Eintages
+  \renewcommand{\cite}[2][__empty__]{% #1 Name of entry
     \begin{PDFInlineObjInText}{Reference}%
     \ifthenelse{\equal{#1}{__empty__}}%
         {\originalcite{#2}}%
