@@ -1,0 +1,168 @@
+\setuptagging[state=start]
+%\setupbackend[level=0]
+\nopdfcompression
+% default is method=auto
+\definedescription[desc]
+
+\setupbibtex[database={sample},sort=author]
+%\setuppublications[alternative=ams]
+\setuppublications[alternative=apa-de]
+
+\setuppagenumbering
+[location=,
+ alternative=doublesided]
+
+\definecounter[ApplicationNoteCounter]
+\define\anc{\incrementcounter[ApplicationNoteCounter]\rawcountervalue[ApplicationNoteCounter]}
+\define\ul\underbar
+
+\definesymbol
+  [emptysym]
+  [  ]
+
+\setupheader[style={\ss \small}]
+\setupfooter[style={\ss \small}]
+
+\setupheadertexts
+  [{Chapter~\getmarking[chapternumber]\hskip1em\getmarking[chapter]}]
+  [{Document Title Number}]
+  [{Document Title Number}]
+  [{Chapter~\getmarking[chapternumber]\hskip1em\getmarking[chapter]}]
+ 
+\setupfootertexts
+  [University of Something]
+  [pagenumber]
+  [pagenumber]
+  [University of Something]
+
+\defineblank [somedistance] [18cm]
+
+\setuptaglabeltext[en][document=text]
+
+
+\starttext
+\startfrontmatter
+
+\setupheader [state=stop]
+\setupfooter [state=stop]
+
+$ $
+\blank[somedistance]
+University of Something\\
+Post Box XYZ\\
+Utopia\\
+Phone: +xxxxx\\
+E-Mail: user@host.com\\
+Internet: url\\
+© University of Something\\
+
+\title{Contents}
+\placelist[chapter,section]
+\stopfrontmatter
+
+\startbodymatter
+\setupheader [state=start]
+\setupfooter [state=start]
+\setuppagenumber[number=3]
+\startchapter[title=First Chapter]
+\startparagraph
+This is the first chapter
+\stopparagraph
+
+This is a formula. How to define alternate text for it?: 
+$f(x) \sqrt{2}$
+
+\startitemize
+\startitem first item.\stopitem
+\startitem second item.\stopitem
+\stopitemize
+
+\startitemize[n]
+\startitem First numbered item.\stopitem
+\startitem Second numbered item.\stopitem
+\stopitemize
+
+\input ward
+
+\startdesc {Hermann Zapf} \input zapf
+\stopdesc
+
+%place is one of: left, right, here, top, bottom, inleft, inright, 
+%inmargin, margin, page, opposite, always, force, tall
+% You get no caption with none
+%
+\placefigure[top][Bildreferenz]{This is the caption}{
+\externalfigure[cow.jpg][width=10cm]
+}
+
+In Figure~\in[Bildreferenz] you can see...
+
+\startlinenumbering [step=5]
+
+\startelement[ignore]
+This text is marked to be explicitly ignored. It should not appear in the tag
+structure. Unfortunately, it is not marked as an artifact.
+\stopelement
+
+
+
+\input zapf
+\input zapf
+\input zapf
+
+\input zapf
+\input zapf
+\input zapf
+
+\stoplinenumbering
+
+\input zapf
+\input zapf
+\input zapf
+
+\startsection[title=Foobar]
+\startsubsection[title=subfoobar]
+foobar.
+\stopsubsection
+\stopsection
+
+\placetable[top][tbl_reference]{Caption}
+{
+\setupTABLE[row][odd][width=.2\textwidth]
+\setupTABLE[c][each][frame=off]
+\setupTABLE[c][3][align=right]
+\setupTABLE[c][4][align=middle]
+\setupTABLE[r][1,2][topframe=on]
+\setupTABLE[r][6][bottomframe=on]
+
+\bTABLE[split=yes] % allow splitting over page boundaries
+\bTABLEhead
+\bTR
+  \bTH  head1 \eTH
+  \bTH  head2 \eTH
+  \bTH  head3 \eTH
+  \bTH  head4 \eTH
+\eTR
+\eTABLEhead
+\bTABLEbody
+  \bTR \bTD[nr=3] 1 \eTD \bTD[nc=2] 2/3     \eTD \bTD[nr=3] 4 \eTD \eTR
+  \bTR                   \bTD 2 \eTD \bTD 3 \eTD                   \eTR
+  \bTR                   \bTD 2 \eTD \bTD 3 \eTD                   \eTR
+  \bTR \bTD[nc=3] 1/2/3                     \eTD \bTD 4 \eTD       \eTR
+  \bTR \bTD 1       \eTD \bTD 2 \eTD \bTD 3 \eTD \bTD 4 \eTD       \eTR
+\eTABLEbody
+\eTABLE
+}
+
+In Table \in[tbl_reference] you can see...
+
+\stopchapter
+
+\setupheader [state=stop]
+\setupfooter [state=stop]
+\starttitle[title=References]
+%\title{References}
+\placepublications[criterium=all]
+\stoptitle
+\stopbodymatter
+\stoptext
